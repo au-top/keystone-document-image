@@ -1,10 +1,10 @@
 {
-  "name": "keystone6-document-gallery-block",
-  "version": "1.0.1",
+  "name": "@beemstream/keystone-document-gallery",
+  "version": "2.0.1",
   "license": "MIT",
   "author": "jutiss",
-  "main": "dist/keystone6-document-gallery-block.cjs.js",
-  "module": "dist/keystone6-document-gallery-block.esm.js",
+  "main": "dist/beemstream-keystone-document-gallery.cjs.js",
+  "module": "dist/beemstream-keystone-document-gallery.esm.js",
   "keywords": [
     "keystone6",
     "gallery",
@@ -17,25 +17,22 @@
     "@preconstruct/cli": "^2.1.5"
   },
   "dependencies": {
-    "@babel/preset-env": "^7.16.4",
-    "@babel/preset-react": "^7.16.0",
-    "@babel/preset-typescript": "^7.16.0",
-    "@keystone-6/core": "^1.0.0",
-    "@keystone-ui/button": "^6.0.0",
-    "@keystone-ui/core": "^4.0.0",
-    "@keystone-ui/fields": "^6.0.0",
-    "@keystone-ui/loading": "^5.0.0",
-    "@keystone-ui/modals": "^4.0.2",
-    "@keystone-ui/toast": "^4.0.4",
-    "@keystone-6/fields-document": "^1.0.0",
-    "react": "^17.0.2",
-    "typescript": "^4.4.3"
+    "@babel/preset-env": "^7.18.9",
+    "@babel/preset-react": "^7.18.0",
+    "@babel/preset-typescript": "^7.18.6",
+    "@keystone-6/core": "^2.1.0",
+    "@keystone-ui/button": "^7.0.0",
+    "@keystone-ui/core": "^5.0.0",
+    "@keystone-ui/fields": "^7.1.0",
+    "@keystone-ui/loading": "^6.0.0",
+    "@keystone-ui/modals": "^6.0.0",
+    "@keystone-ui/toast": "^6.0.0",
+    "@keystone-6/fields-document": "^4.0.1",
+    "react": "^18.1.0",
+    "typescript": "^4.7.4"
   },
   "engines": {
     "node": "^12.20 || >= 14.13"
   },
-  "bugs": {
-    "url": "https://github.com/jutiss/keystone6-document-gallery-block/issues"
-  },
-  "homepage": "https://github.com/jutiss/keystone6-document-gallery-block"
+  "homepage": "https://github.com/beemstream/keystone-document-gallery"
 }

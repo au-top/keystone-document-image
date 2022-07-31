@@ -1,21 +1,13 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-var React = require('react');
-var componentBlocks = require('@keystone-6/fields-document/component-blocks');
-var fields = require('@keystone-ui/fields');
-var core = require('@keystone-ui/core');
-var button = require('@keystone-ui/button');
-var modals = require('@keystone-ui/modals');
-var toast = require('@keystone-ui/toast');
-var apollo = require('@keystone-6/core/admin-ui/apollo');
-var context = require('@keystone-6/core/admin-ui/context');
-var loading = require('@keystone-ui/loading');
-
-function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }
-
-var React__default = /*#__PURE__*/_interopDefault(React);
+import React, { useState, useMemo, useRef } from 'react';
+import { component, NotEditable, fields } from '@keystone-6/fields-document/component-blocks';
+import { Checkbox, FieldContainer } from '@keystone-ui/fields';
+import { jsx } from '@keystone-ui/core';
+import { Button } from '@keystone-ui/button';
+import { DrawerProvider, DrawerController, Drawer } from '@keystone-ui/modals';
+import { useToasts } from '@keystone-ui/toast';
+import { useApolloClient, ApolloClient, InMemoryCache, gql, useQuery, useMutation } from '@keystone-6/core/admin-ui/apollo';
+import { useList } from '@keystone-6/core/admin-ui/context';
+import { LoadingDots } from '@keystone-ui/loading';
 
 function _typeof(obj) {
   "@babel/helpers - typeof";
@@ -180,15 +172,15 @@ var _templateObject, _templateObject2, _templateObject3;
 function UploadFile(_ref) {
   var listKey = _ref.listKey,
       onFinished = _ref.onFinished;
-  var inputRef = React.useRef(null);
-  var list = context.useList(listKey);
-  var toasts = toast.useToasts();
-  var UPLOAD_IMAGE = apollo.gql(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n    mutation ", "($name: String, $file: Upload) {\n      ", "(data: { image: { upload: $file }, name: $name }) {\n        id\n      }\n    }\n  "])), list.gqlNames.createManyMutationName, list.gqlNames.createManyMutationName);
+  var inputRef = useRef(null);
+  var list = useList(listKey);
+  var toasts = useToasts();
+  var UPLOAD_IMAGE = gql(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n    mutation ", "($name: String, $file: Upload) {\n      ", "(data: { image: { upload: $file }, name: $name }) {\n        id\n      }\n    }\n  "])), list.gqlNames.createManyMutationName, list.gqlNames.createManyMutationName);
 
-  var _useMutation = apollo.useMutation(UPLOAD_IMAGE),
+  var _useMutation = useMutation(UPLOAD_IMAGE),
       _useMutation2 = _slicedToArray(_useMutation, 2),
       uploadImage = _useMutation2[0],
-      loading$1 = _useMutation2[1].loading;
+      loading = _useMutation2[1].loading;
 
   var onUploadChange = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(_ref2) {
@@ -260,13 +252,13 @@ function UploadFile(_ref) {
     };
   }();
 
-  return core.jsx("div", null, core.jsx(GalleryItemPlaceholder, {
+  return jsx("div", null, jsx(GalleryItemPlaceholder, {
     onClick: function onClick() {
       var _inputRef$current;
 
       (_inputRef$current = inputRef.current) === null || _inputRef$current === void 0 ? void 0 : _inputRef$current.click();
     }
-  }, loading$1 ? core.jsx(loading.LoadingDots, {
+  }, loading ? jsx(LoadingDots, {
     css: {
       width: "40px",
       height: "8px",
@@ -279,7 +271,7 @@ function UploadFile(_ref) {
     },
     size: "small",
     label: "Loading"
-  }) : core.jsx("svg", {
+  }) : jsx("svg", {
     css: {
       width: "32px",
       height: "32px",
@@ -296,12 +288,12 @@ function UploadFile(_ref) {
     fill: "none",
     viewBox: "0 0 24 24",
     stroke: "currentColor"
-  }, core.jsx("path", {
+  }, jsx("path", {
     strokeLinecap: "round",
     strokeLinejoin: "round",
     strokeWidth: 2,
     d: "M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-  }))), core.jsx("input", {
+  }))), jsx("input", {
     autoComplete: "off",
     onChange: onUploadChange,
     type: "file",
@@ -320,20 +312,20 @@ function GalleryDrawer(_ref4) {
       onCancel = _ref4.onCancel,
       onChange = _ref4.onChange;
 
-  var _useState = React.useState([]),
+  var _useState = useState([]),
       _useState2 = _slicedToArray(_useState, 2),
       selected = _useState2[0],
       setSelected = _useState2[1];
 
-  var list = context.useList(listKey);
-  var link = apollo.useApolloClient().link;
-  var toasts = toast.useToasts(); // we're using a local apollo client here because writing a global implementation of the typePolicies
+  var list = useList(listKey);
+  var link = useApolloClient().link;
+  var toasts = useToasts(); // we're using a local apollo client here because writing a global implementation of the typePolicies
   // would require making assumptions about how pagination should work which won't always be right
 
-  var apolloClient = React.useMemo(function () {
-    return new apollo.ApolloClient({
+  var apolloClient = useMemo(function () {
+    return new ApolloClient({
       link: link,
-      cache: new apollo.InMemoryCache({
+      cache: new InMemoryCache({
         typePolicies: {
           Query: {
             fields: _defineProperty({}, list.gqlNames.listQueryName, {
@@ -356,23 +348,23 @@ function GalleryDrawer(_ref4) {
       })
     });
   }, [link]);
-  var GET_IMAGES = apollo.gql(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\n    query ", "($take: Int, $skip: Int) {\n      ", "(orderBy: [{ id: desc }], take: $take, skip: $skip) {\n        id\n        image {\n          url\n          width\n          height\n        }\n      }\n      ", "\n    }\n  "])), list.gqlNames.listQueryName, list.gqlNames.listQueryName, list.gqlNames.listQueryCountName);
-  var DELETE_IMAGES = apollo.gql(_templateObject3 || (_templateObject3 = _taggedTemplateLiteral(["\n    mutation ", "($where: [", "!]!) {\n      ", "(where: $where) {\n        id\n      }\n    }\n  "])), list.gqlNames.deleteManyMutationName, list.gqlNames.whereUniqueInputName, list.gqlNames.deleteManyMutationName);
+  var GET_IMAGES = gql(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\n    query ", "($take: Int, $skip: Int) {\n      ", "(orderBy: [{ id: desc }], take: $take, skip: $skip) {\n        id\n        image {\n          url\n          width\n          height\n        }\n      }\n      ", "\n    }\n  "])), list.gqlNames.listQueryName, list.gqlNames.listQueryName, list.gqlNames.listQueryCountName);
+  var DELETE_IMAGES = gql(_templateObject3 || (_templateObject3 = _taggedTemplateLiteral(["\n    mutation ", "($where: [", "!]!) {\n      ", "(where: $where) {\n        id\n      }\n    }\n  "])), list.gqlNames.deleteManyMutationName, list.gqlNames.whereUniqueInputName, list.gqlNames.deleteManyMutationName);
 
-  var _useQuery = apollo.useQuery(GET_IMAGES, {
+  var _useQuery = useQuery(GET_IMAGES, {
     variables: {
       skip: 0,
       take: list.pageSize
     },
     client: apolloClient
   }),
-      loading$1 = _useQuery.loading,
+      loading = _useQuery.loading,
       error = _useQuery.error,
       data = _useQuery.data,
       fetchMore = _useQuery.fetchMore,
       refetch = _useQuery.refetch;
 
-  var _useMutation3 = apollo.useMutation(DELETE_IMAGES, {
+  var _useMutation3 = useMutation(DELETE_IMAGES, {
     refetchQueries: [GET_IMAGES, list.gqlNames.listQueryName],
     client: apolloClient
   }),
@@ -455,8 +447,8 @@ function GalleryDrawer(_ref4) {
     };
   }();
 
-  var listItems = loading$1 || error ? [] : data[list.gqlNames.listQueryName].map(function (item) {
-    return core.jsx(GalleryItem, {
+  var listItems = loading || error ? [] : data[list.gqlNames.listQueryName].map(function (item) {
+    return jsx(GalleryItem, {
       key: item.id,
       item: item,
       checked: selected.includes(item.id),
@@ -465,43 +457,43 @@ function GalleryDrawer(_ref4) {
       }
     });
   });
-  return core.jsx(modals.DrawerProvider, null, core.jsx(modals.DrawerController, {
+  return jsx(DrawerProvider, null, jsx(DrawerController, {
     isOpen: isOpen
-  }, core.jsx(modals.Drawer, {
+  }, jsx(Drawer, {
     title: "Image Gallery",
     actions: actions
-  }, loading$1 ? core.jsx("div", {
+  }, loading ? jsx("div", {
     css: {
       minHeight: "calc(100vh - 170px)",
       display: "flex",
       justifyContent: "center",
       alignItems: "center"
     }
-  }, core.jsx(loading.LoadingDots, {
+  }, jsx(LoadingDots, {
     label: "Loading"
-  })) : core.jsx("div", {
+  })) : jsx("div", {
     css: {
       minHeight: "calc(100vh - 170px)"
     }
-  }, error ? core.jsx("div", null, "Error has occurred: ", error === null || error === void 0 ? void 0 : error.message) : core.jsx("div", null, core.jsx("div", {
+  }, error ? jsx("div", null, "Error has occurred: ", error === null || error === void 0 ? void 0 : error.message) : jsx("div", null, jsx("div", {
     css: {
       padding: "20px 0 0 0",
       display: "flex",
       justifyContent: "space-between",
       minHeight: "52px"
     }
-  }, core.jsx("div", null, "Showing", " ", core.jsx("strong", null, data[list.gqlNames.listQueryName].length), " ", "of ", data[list.gqlNames.listQueryCountName], " image(s)"), selected.length > 0 && core.jsx(button.Button, {
+  }, jsx("div", null, "Showing", " ", jsx("strong", null, data[list.gqlNames.listQueryName].length), " ", "of ", data[list.gqlNames.listQueryCountName], " image(s)"), selected.length > 0 && jsx(Button, {
     tone: "negative",
     size: "small",
     onClick: function onClick() {
       return deleteItems();
     }
-  }, "Delete")), core.jsx(GalleryItemsWrapper, null, core.jsx(UploadFile, {
+  }, "Delete")), jsx(GalleryItemsWrapper, null, jsx(UploadFile, {
     listKey: listKey,
     onFinished: function onFinished() {
       return refetch();
     }
-  }), listItems), data[list.gqlNames.listQueryCountName] > list.pageSize && core.jsx("div", null, core.jsx(button.Button, {
+  }), listItems), data[list.gqlNames.listQueryCountName] > list.pageSize && jsx("div", null, jsx(Button, {
     onClick: function onClick() {
       return fetchMore({
         variables: {
@@ -518,7 +510,7 @@ var GalleryItem = function GalleryItem(_ref) {
       item = _ref.item,
       _ref$checked = _ref.checked,
       checked = _ref$checked === void 0 ? false : _ref$checked;
-  return core.jsx("div", {
+  return jsx("div", {
     css: {
       backgroundColor: "#e1e5e9",
       borderRadius: "8px",
@@ -530,42 +522,42 @@ var GalleryItem = function GalleryItem(_ref) {
     onClick: function onClick() {
       return _onClick === null || _onClick === void 0 ? void 0 : _onClick(item);
     }
-  }, _onClick && core.jsx("div", {
+  }, _onClick && jsx("div", {
     css: {
       position: "absolute",
       zIndex: "1",
       margin: "10px",
       right: "0"
     }
-  }, core.jsx(fields.Checkbox, {
+  }, jsx(Checkbox, {
     checked: checked,
     readOnly: true
-  })), onRemove && core.jsx("div", {
+  })), onRemove && jsx("div", {
     css: {
       position: "absolute",
       zIndex: "1",
       margin: "10px",
       right: "0"
     }
-  }, core.jsx(button.Button, {
+  }, jsx(Button, {
     size: "small",
     tone: "negative",
     onClick: function onClick() {
       return onRemove(item);
     }
-  }, core.jsx("svg", {
+  }, jsx("svg", {
     xmlns: "http://www.w3.org/2000/svg",
     width: "16",
     height: "16",
     fill: "none",
     viewBox: "0 0 24 24",
     stroke: "currentColor"
-  }, core.jsx("path", {
+  }, jsx("path", {
     strokeLinecap: "round",
     strokeLinejoin: "round",
     strokeWidth: 2,
     d: "M6 18L18 6M6 6l12 12"
-  })))), core.jsx("img", {
+  })))), jsx("img", {
     css: {
       objectFit: "cover",
       width: "100%",
@@ -579,7 +571,7 @@ var GalleryItem = function GalleryItem(_ref) {
 var GalleryItemPlaceholder = function GalleryItemPlaceholder(_ref2) {
   var children = _ref2.children,
       _onClick2 = _ref2.onClick;
-  return core.jsx("div", {
+  return jsx("div", {
     onClick: function onClick() {
       return _onClick2 === null || _onClick2 === void 0 ? void 0 : _onClick2();
     },
@@ -598,7 +590,7 @@ var GalleryItemPlaceholder = function GalleryItemPlaceholder(_ref2) {
 };
 var GalleryItemsWrapper = function GalleryItemsWrapper(_ref3) {
   var children = _ref3.children;
-  return core.jsx("div", {
+  return jsx("div", {
     css: {
       display: "grid",
       gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
@@ -612,7 +604,7 @@ var Gallery = function Gallery(_ref4) {
       value = _ref4.value,
       onChange = _ref4.onChange;
 
-  var _useState = React.useState(false),
+  var _useState = useState(false),
       _useState2 = _slicedToArray(_useState, 2),
       isModalOpen = _useState2[0],
       setIsModalOpen = _useState2[1];
@@ -634,7 +626,7 @@ var Gallery = function Gallery(_ref4) {
   };
 
   var listItems = value.map(function (item) {
-    return core.jsx(GalleryItem, {
+    return jsx(GalleryItem, {
       key: item.id,
       item: item,
       checked: false,
@@ -643,11 +635,11 @@ var Gallery = function Gallery(_ref4) {
       }
     });
   });
-  return core.jsx("div", null, value.length > 0 ? core.jsx(GalleryItemsWrapper, null, listItems) : core.jsx(GalleryItemsWrapper, null, core.jsx(GalleryItemPlaceholder, null), core.jsx(GalleryItemPlaceholder, null), core.jsx(GalleryItemPlaceholder, null)), core.jsx(button.Button, {
+  return jsx("div", null, value.length > 0 ? jsx(GalleryItemsWrapper, null, listItems) : jsx(GalleryItemsWrapper, null, jsx(GalleryItemPlaceholder, null), jsx(GalleryItemPlaceholder, null), jsx(GalleryItemPlaceholder, null)), jsx(Button, {
     onClick: function onClick() {
       return setIsModalOpen(true);
     }
-  }, core.jsx("span", null, "Add Images")), core.jsx(GalleryDrawer, {
+  }, jsx("span", null, "Add Images")), jsx(GalleryDrawer, {
     listKey: listKey,
     isOpen: isModalOpen,
     onCancel: function onCancel() {
@@ -670,7 +662,7 @@ var customFields = {
         var value = _ref2.value,
             _onChange = _ref2.onChange;
             _ref2.autoFocus;
-        return /*#__PURE__*/React__default["default"].createElement(fields.FieldContainer, null, /*#__PURE__*/React__default["default"].createElement(Gallery, {
+        return /*#__PURE__*/React.createElement(FieldContainer, null, /*#__PURE__*/React.createElement(Gallery, {
           listKey: listKey,
           value: value,
           onChange: function onChange(items) {
@@ -688,33 +680,31 @@ var customFields = {
 };
 var gallery = function gallery(_ref3) {
   var listKey = _ref3.listKey;
-  return componentBlocks.component({
-    component: function component(_ref4) {
-      var capture = _ref4.capture,
-          items = _ref4.items;
-      return /*#__PURE__*/React__default["default"].createElement("div", null, /*#__PURE__*/React__default["default"].createElement(componentBlocks.NotEditable, null, items.value.length > 0 ? /*#__PURE__*/React__default["default"].createElement(GalleryItemsWrapper, null, items.value.map(function (image) {
-        return /*#__PURE__*/React__default["default"].createElement(GalleryItem, {
+  return component({
+    preview: function preview(props) {
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(NotEditable, null, props.fields.items.value.length > 0 ? /*#__PURE__*/React.createElement(GalleryItemsWrapper, null, props.fields.items.value.map(function (image) {
+        return /*#__PURE__*/React.createElement(GalleryItem, {
           key: image.id,
           item: image
         });
-      })) : /*#__PURE__*/React__default["default"].createElement(GalleryItemsWrapper, null, /*#__PURE__*/React__default["default"].createElement(GalleryItemPlaceholder, null), /*#__PURE__*/React__default["default"].createElement(GalleryItemPlaceholder, null), /*#__PURE__*/React__default["default"].createElement(GalleryItemPlaceholder, null))), /*#__PURE__*/React__default["default"].createElement("div", {
+      })) : /*#__PURE__*/React.createElement(GalleryItemsWrapper, null, /*#__PURE__*/React.createElement(GalleryItemPlaceholder, null), /*#__PURE__*/React.createElement(GalleryItemPlaceholder, null), /*#__PURE__*/React.createElement(GalleryItemPlaceholder, null))), /*#__PURE__*/React.createElement("div", {
         style: {
           borderLeft: "3px solid #CBD5E0",
           paddingLeft: 16
         }
-      }, /*#__PURE__*/React__default["default"].createElement("div", {
+      }, /*#__PURE__*/React.createElement("div", {
         style: {
           fontStyle: "italic",
           color: "#4A5568"
         }
-      }, capture)));
+      }, props.fields.capture.element)));
     },
     label: "Gallery",
-    props: {
+    schema: {
       items: customFields.gallery({
         listKey: listKey
       }),
-      capture: componentBlocks.fields.child({
+      capture: fields.child({
         kind: "block",
         placeholder: "Capture...",
         formatting: {
@@ -728,4 +718,4 @@ var gallery = function gallery(_ref3) {
   });
 };
 
-exports.gallery = gallery;
+export { gallery };

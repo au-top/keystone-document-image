@@ -61,13 +61,13 @@ const customFields = {
 
 export const gallery = ({ listKey }: { listKey: string }) => {
   return component({
-    component: ({ capture, items }) => {
+    preview: (props) => {
       return (
         <div>
           <NotEditable>
-            {items.value.length > 0 ? (
+            {props.fields.items.value.length > 0 ? (
               <GalleryItemsWrapper>
-                {items.value.map((image) => {
+                {props.fields.items.value.map((image) => {
                   return <GalleryItem key={image.id} item={image} />;
                 })}
               </GalleryItemsWrapper>
@@ -86,14 +86,14 @@ export const gallery = ({ listKey }: { listKey: string }) => {
             }}
           >
             <div style={{ fontStyle: "italic", color: "#4A5568" }}>
-              {capture}
+              {props.fields.capture.element}
             </div>
           </div>
         </div>
       );
     },
     label: "Gallery",
-    props: {
+    schema: {
       items: customFields.gallery({
         listKey,
       }),
