@@ -1,6 +1,6 @@
 {
   "name": "@beemstream/keystone-document-gallery",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "license": "MIT",
   "author": "jutiss",
   "main": "dist/beemstream-keystone-document-gallery.cjs.js",
@@ -21,13 +21,13 @@
     "@babel/preset-react": "^7.18.0",
     "@babel/preset-typescript": "^7.18.6",
     "@keystone-6/core": "^2.1.0",
+    "@keystone-6/fields-document": "^4.0.1",
     "@keystone-ui/button": "^7.0.0",
     "@keystone-ui/core": "^5.0.0",
     "@keystone-ui/fields": "^7.1.0",
     "@keystone-ui/loading": "^6.0.0",
     "@keystone-ui/modals": "^6.0.0",
     "@keystone-ui/toast": "^6.0.0",
-    "@keystone-6/fields-document": "^4.0.1",
     "react": "^18.1.0",
     "typescript": "^4.7.4"
   },
