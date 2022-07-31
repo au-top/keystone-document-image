@@ -183,7 +183,7 @@ function UploadFile(_ref) {
   var inputRef = React.useRef(null);
   var list = context.useList(listKey);
   var toasts = toast.useToasts();
-  var UPLOAD_IMAGE = apollo.gql(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n    mutation ", "($name: String, $file: Upload) {\n      ", "(data: { image: { upload: $file }, name: $name }) {\n        id\n      }\n    }\n  "])), list.gqlNames.createManyMutationName, list.gqlNames.createManyMutationName);
+  var UPLOAD_IMAGE = apollo.gql(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n    mutation ", "($name: String, $file: Upload!) {\n      ", "(data: { image: { upload: $file }, name: $name }) {\n        id\n      }\n    }\n  "])), list.gqlNames.createManyMutationName, list.gqlNames.createManyMutationName);
 
   var _useMutation = apollo.useMutation(UPLOAD_IMAGE),
       _useMutation2 = _slicedToArray(_useMutation, 2),
@@ -209,16 +209,17 @@ function UploadFile(_ref) {
               return _context.abrupt("return");
 
             case 4:
+              console.log(files);
               i = 0;
 
-            case 5:
+            case 6:
               if (!(i < files.length)) {
-                _context.next = 17;
+                _context.next = 18;
                 break;
               }
 
-              _context.prev = 6;
-              _context.next = 9;
+              _context.prev = 7;
+              _context.next = 10;
               return uploadImage({
                 variables: {
                   file: files[i],
@@ -226,33 +227,33 @@ function UploadFile(_ref) {
                 }
               });
 
-            case 9:
-              _context.next = 14;
+            case 10:
+              _context.next = 15;
               break;
 
-            case 11:
-              _context.prev = 11;
-              _context.t0 = _context["catch"](6);
+            case 12:
+              _context.prev = 12;
+              _context.t0 = _context["catch"](7);
               toasts.addToast({
                 title: "Failed to upload file: ".concat(files[i].name),
                 tone: "negative",
                 message: _context.t0.message
               });
 
-            case 14:
+            case 15:
               i++;
-              _context.next = 5;
+              _context.next = 6;
               break;
 
-            case 17:
+            case 18:
               onFinished === null || onFinished === void 0 ? void 0 : onFinished();
 
-            case 18:
+            case 19:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[6, 11]]);
+      }, _callee, null, [[7, 12]]);
     }));
 
     return function onUploadChange(_x) {
@@ -260,7 +261,7 @@ function UploadFile(_ref) {
     };
   }();
 
-  return core.jsx("div", null, core.jsx(GalleryItemPlaceholder, {
+  return core.jsx("div", null, core.jsx(toast.ToastProvider, null, core.jsx(GalleryItemPlaceholder, {
     onClick: function onClick() {
       var _inputRef$current;
 
@@ -301,7 +302,7 @@ function UploadFile(_ref) {
     strokeLinejoin: "round",
     strokeWidth: 2,
     d: "M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-  }))), core.jsx("input", {
+  })))), core.jsx("input", {
     autoComplete: "off",
     onChange: onUploadChange,
     type: "file",
@@ -456,16 +457,16 @@ function GalleryDrawer(_ref4) {
   }();
 
   var listItems = loading$1 || error ? [] : data[list.gqlNames.listQueryName].map(function (item) {
-    return core.jsx(GalleryItem, {
+    return core.jsx(toast.ToastProvider, null, core.jsx(GalleryItem, {
       key: item.id,
       item: item,
       checked: selected.includes(item.id),
       onClick: function onClick() {
         return toggleItem(item);
       }
-    });
+    }));
   });
-  return core.jsx(modals.DrawerProvider, null, core.jsx(modals.DrawerController, {
+  return core.jsx(toast.ToastProvider, null, core.jsx(modals.DrawerProvider, null, core.jsx(modals.DrawerController, {
     isOpen: isOpen
   }, core.jsx(modals.Drawer, {
     title: "Image Gallery",
@@ -509,7 +510,7 @@ function GalleryDrawer(_ref4) {
         }
       });
     }
-  }, "Fetch more")))))));
+  }, "Fetch more"))))))));
 }
 
 var GalleryItem = function GalleryItem(_ref) {

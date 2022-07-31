@@ -4,7 +4,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { jsx } from "@keystone-ui/core";
 import { Drawer, DrawerController, DrawerProvider } from "@keystone-ui/modals";
-import { useToasts } from "@keystone-ui/toast";
+import { useToasts, ToastProvider } from "@keystone-ui/toast";
 import {
   ApolloClient,
   useQuery,
@@ -33,7 +33,7 @@ function UploadFile({
   const toasts = useToasts();
 
   const UPLOAD_IMAGE = gql`
-    mutation ${list.gqlNames.createManyMutationName}($name: String, $file: Upload) {
+    mutation ${list.gqlNames.createManyMutationName}($name: String, $file: Upload!) {
       ${list.gqlNames.createManyMutationName}(data: { image: { upload: $file }, name: $name }) {
         id
       }
@@ -47,6 +47,8 @@ function UploadFile({
   }: React.SyntheticEvent<HTMLInputElement>) => {
     const file = files?.[0]; // bail if the user cancels from the file browser
     if (!file) return;
+
+       console.log(files);
 
     for (var i = 0; i < files.length; i++) {
       try {
@@ -67,6 +69,7 @@ function UploadFile({
 
   return (
     <div>
+        <ToastProvider>
       <GalleryItemPlaceholder
         onClick={() => {
           inputRef.current?.click();
@@ -115,6 +118,7 @@ function UploadFile({
           </svg>
         )}
       </GalleryItemPlaceholder>
+        </ToastProvider>
       <input
         autoComplete="off"
         onChange={onUploadChange}
@@ -269,16 +273,19 @@ export default function GalleryDrawer({
       ? []
       : data[list.gqlNames.listQueryName].map((item: GalleryItemType) => {
           return (
+              <ToastProvider>
             <GalleryItem
               key={item.id}
               item={item}
               checked={selected.includes(item.id)}
               onClick={() => toggleItem(item)}
             />
+              </ToastProvider>
           );
         });
 
   return (
+      <ToastProvider>
     <DrawerProvider>
       <DrawerController isOpen={isOpen}>
         <Drawer title="Image Gallery" actions={actions}>
@@ -357,5 +364,6 @@ export default function GalleryDrawer({
         </Drawer>
       </DrawerController>
     </DrawerProvider>
+      </ToastProvider>
   );
 }
