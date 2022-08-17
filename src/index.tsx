@@ -8,10 +8,10 @@ import {
 
 import { FieldContainer } from "@keystone-ui/fields";
 import {
-  Gallery,
-  GalleryItem,
-  GalleryItemsWrapper,
-  GalleryItemPlaceholder,
+  BigImageView,
+  BigImageItem,
+  BigImageItemsWrapper,
+  BigImageItemPlaceholder,
 } from "./views";
 
 export type ImageData = {
@@ -23,14 +23,14 @@ export type ImageData = {
   url: string;
 };
 
-export type GalleryItem = {
+export type BigImageItem = {
   id: string;
   name: string;
   image: ImageData;
 };
 
 const customFields = {
-  gallery<Option extends { label: string; value: GalleryItem }>({
+  BigImage<Option extends { label: string; value: BigImageItem }>({
     listKey,
     defaultValue = [],
   }: {
@@ -42,7 +42,7 @@ const customFields = {
       Input({ value, onChange, autoFocus }) {
         return (
           <FieldContainer>
-            <Gallery
+            <BigImageView
               listKey={listKey}
               value={value}
               onChange={(items) => onChange(items)}
@@ -59,24 +59,22 @@ const customFields = {
   },
 };
 
-export const gallery = ({ listKey }: { listKey: string }) => {
+export const BigImage = ({ listKey }: { listKey: string }) => {
   return component({
     preview: (props) => {
       return (
         <div>
           <NotEditable>
             {props.fields.items.value.length > 0 ? (
-              <GalleryItemsWrapper>
+              <BigImageItemsWrapper>
                 {props.fields.items.value.map((image) => {
-                  return <GalleryItem key={image.id} item={image} />;
+                  return <BigImageItem key={image.id} item={image} />;
                 })}
-              </GalleryItemsWrapper>
+              </BigImageItemsWrapper>
             ) : (
-              <GalleryItemsWrapper>
-                <GalleryItemPlaceholder />
-                <GalleryItemPlaceholder />
-                <GalleryItemPlaceholder />
-              </GalleryItemsWrapper>
+              <BigImageItemsWrapper>
+                <BigImageItemPlaceholder />
+              </BigImageItemsWrapper>
             )}
           </NotEditable>
           <div
@@ -92,14 +90,14 @@ export const gallery = ({ listKey }: { listKey: string }) => {
         </div>
       );
     },
-    label: "Gallery",
+    label: "BigImage",
     schema: {
-      items: customFields.gallery({
+      items: customFields.BigImage({
         listKey,
       }),
       capture: fields.child({
         kind: "block",
-        placeholder: "Capture...",
+        placeholder: "说明...",
         formatting: { inlineMarks: "inherit", softBreaks: "inherit" },
         links: "inherit",
       }),

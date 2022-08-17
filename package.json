@@ -1,10 +1,10 @@
 {
-  "name": "@beemstream/keystone-document-gallery",
+  "name": "@autop/keystone-document-image",
   "version": "2.0.5",
   "license": "MIT",
   "author": "jutiss",
-  "main": "dist/beemstream-keystone-document-gallery.cjs.js",
-  "module": "dist/beemstream-keystone-document-gallery.esm.js",
+  "main": "dist/autop-keystone-document-image.cjs.js",
+  "module": "dist/autop-keystone-document-image.esm.js",
   "keywords": [
     "keystone6",
     "gallery",
@@ -35,5 +35,5 @@
   "engines": {
     "node": "^14.15 || ^16.13"
   },
-  "homepage": "https://github.com/beemstream/keystone-document-gallery"
+  "homepage": "https://github.com/au-top/keystone-document-image"
 }

@@ -1,13 +1,21 @@
-import React, { useState, useMemo, useRef } from 'react';
-import { component, NotEditable, fields } from '@keystone-6/fields-document/component-blocks';
-import { Checkbox, FieldContainer } from '@keystone-ui/fields';
-import { jsx } from '@keystone-ui/core';
-import { Button } from '@keystone-ui/button';
-import { DrawerProvider, DrawerController, Drawer } from '@keystone-ui/modals';
-import { useToasts, ToastProvider } from '@keystone-ui/toast';
-import { useApolloClient, ApolloClient, InMemoryCache, gql, useQuery, useMutation } from '@keystone-6/core/admin-ui/apollo';
-import { useList } from '@keystone-6/core/admin-ui/context';
-import { LoadingDots } from '@keystone-ui/loading';
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var React = require('react');
+var componentBlocks = require('@keystone-6/fields-document/component-blocks');
+var fields = require('@keystone-ui/fields');
+var core = require('@keystone-ui/core');
+var button = require('@keystone-ui/button');
+var modals = require('@keystone-ui/modals');
+var toast = require('@keystone-ui/toast');
+var apollo = require('@keystone-6/core/admin-ui/apollo');
+var context = require('@keystone-6/core/admin-ui/context');
+var loading = require('@keystone-ui/loading');
+
+function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }
+
+var React__default = /*#__PURE__*/_interopDefault(React);
 
 function _typeof(obj) {
   "@babel/helpers - typeof";
@@ -172,15 +180,15 @@ var _templateObject, _templateObject2, _templateObject3;
 function UploadFile(_ref) {
   var listKey = _ref.listKey,
       onFinished = _ref.onFinished;
-  var inputRef = useRef(null);
-  var list = useList(listKey);
-  var toasts = useToasts();
-  var UPLOAD_IMAGE = gql(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n    mutation ", "($name: String, $file: Upload!) {\n      ", "(data: { image: { upload: $file }, name: $name }) {\n        id\n      }\n    }\n  "])), list.gqlNames.createManyMutationName, list.gqlNames.createManyMutationName);
+  var inputRef = React.useRef(null);
+  var list = context.useList(listKey);
+  var toasts = toast.useToasts();
+  var UPLOAD_IMAGE = apollo.gql(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n    mutation ", "($name: String, $file: Upload!) {\n      ", "(data: { image: { upload: $file }, name: $name }) {\n        id\n      }\n    }\n  "])), list.gqlNames.createManyMutationName, list.gqlNames.createManyMutationName);
 
-  var _useMutation = useMutation(UPLOAD_IMAGE),
+  var _useMutation = apollo.useMutation(UPLOAD_IMAGE),
       _useMutation2 = _slicedToArray(_useMutation, 2),
       uploadImage = _useMutation2[0],
-      loading = _useMutation2[1].loading;
+      loading$1 = _useMutation2[1].loading;
 
   var onUploadChange = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(_ref2) {
@@ -253,13 +261,13 @@ function UploadFile(_ref) {
     };
   }();
 
-  return jsx("div", null, jsx(ToastProvider, null, jsx(GalleryItemPlaceholder, {
+  return core.jsx("div", null, core.jsx(toast.ToastProvider, null, core.jsx(BigImageItemPlaceholder, {
     onClick: function onClick() {
       var _inputRef$current;
 
       (_inputRef$current = inputRef.current) === null || _inputRef$current === void 0 ? void 0 : _inputRef$current.click();
     }
-  }, loading ? jsx(LoadingDots, {
+  }, loading$1 ? core.jsx(loading.LoadingDots, {
     css: {
       width: "40px",
       height: "8px",
@@ -272,7 +280,7 @@ function UploadFile(_ref) {
     },
     size: "small",
     label: "Loading"
-  }) : jsx("svg", {
+  }) : core.jsx("svg", {
     css: {
       width: "32px",
       height: "32px",
@@ -289,12 +297,12 @@ function UploadFile(_ref) {
     fill: "none",
     viewBox: "0 0 24 24",
     stroke: "currentColor"
-  }, jsx("path", {
+  }, core.jsx("path", {
     strokeLinecap: "round",
     strokeLinejoin: "round",
     strokeWidth: 2,
     d: "M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-  })))), jsx("input", {
+  })))), core.jsx("input", {
     autoComplete: "off",
     onChange: onUploadChange,
     type: "file",
@@ -307,26 +315,26 @@ function UploadFile(_ref) {
   }));
 }
 
-function GalleryDrawer(_ref4) {
+function BigImageDrawer(_ref4) {
   var listKey = _ref4.listKey,
       isOpen = _ref4.isOpen,
       onCancel = _ref4.onCancel,
       onChange = _ref4.onChange;
 
-  var _useState = useState([]),
+  var _useState = React.useState([]),
       _useState2 = _slicedToArray(_useState, 2),
       selected = _useState2[0],
       setSelected = _useState2[1];
 
-  var list = useList(listKey);
-  var link = useApolloClient().link;
-  var toasts = useToasts(); // we're using a local apollo client here because writing a global implementation of the typePolicies
+  var list = context.useList(listKey);
+  var link = apollo.useApolloClient().link;
+  var toasts = toast.useToasts(); // we're using a local apollo client here because writing a global implementation of the typePolicies
   // would require making assumptions about how pagination should work which won't always be right
 
-  var apolloClient = useMemo(function () {
-    return new ApolloClient({
+  var apolloClient = React.useMemo(function () {
+    return new apollo.ApolloClient({
       link: link,
-      cache: new InMemoryCache({
+      cache: new apollo.InMemoryCache({
         typePolicies: {
           Query: {
             fields: _defineProperty({}, list.gqlNames.listQueryName, {
@@ -349,23 +357,23 @@ function GalleryDrawer(_ref4) {
       })
     });
   }, [link]);
-  var GET_IMAGES = gql(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\n    query ", "($take: Int, $skip: Int) {\n      ", "(orderBy: [{ id: desc }], take: $take, skip: $skip) {\n        id\n        image {\n          url\n          width\n          height\n        }\n      }\n      ", "\n    }\n  "])), list.gqlNames.listQueryName, list.gqlNames.listQueryName, list.gqlNames.listQueryCountName);
-  var DELETE_IMAGES = gql(_templateObject3 || (_templateObject3 = _taggedTemplateLiteral(["\n    mutation ", "($where: [", "!]!) {\n      ", "(where: $where) {\n        id\n      }\n    }\n  "])), list.gqlNames.deleteManyMutationName, list.gqlNames.whereUniqueInputName, list.gqlNames.deleteManyMutationName);
+  var GET_IMAGES = apollo.gql(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\n    query ", "($take: Int, $skip: Int) {\n      ", "(orderBy: [{ id: desc }], take: $take, skip: $skip) {\n        id\n        image {\n          url\n          width\n          height\n        }\n      }\n      ", "\n    }\n  "])), list.gqlNames.listQueryName, list.gqlNames.listQueryName, list.gqlNames.listQueryCountName);
+  var DELETE_IMAGES = apollo.gql(_templateObject3 || (_templateObject3 = _taggedTemplateLiteral(["\n    mutation ", "($where: [", "!]!) {\n      ", "(where: $where) {\n        id\n      }\n    }\n  "])), list.gqlNames.deleteManyMutationName, list.gqlNames.whereUniqueInputName, list.gqlNames.deleteManyMutationName);
 
-  var _useQuery = useQuery(GET_IMAGES, {
+  var _useQuery = apollo.useQuery(GET_IMAGES, {
     variables: {
       skip: 0,
       take: list.pageSize
     },
     client: apolloClient
   }),
-      loading = _useQuery.loading,
+      loading$1 = _useQuery.loading,
       error = _useQuery.error,
       data = _useQuery.data,
       fetchMore = _useQuery.fetchMore,
       refetch = _useQuery.refetch;
 
-  var _useMutation3 = useMutation(DELETE_IMAGES, {
+  var _useMutation3 = apollo.useMutation(DELETE_IMAGES, {
     refetchQueries: [GET_IMAGES, list.gqlNames.listQueryName],
     client: apolloClient
   }),
@@ -379,7 +387,7 @@ function GalleryDrawer(_ref4) {
       action: function action() {
         return onCancel();
       },
-      label: "Cancel"
+      label: "离开"
     },
     confirm: {
       action: function action() {
@@ -388,9 +396,9 @@ function GalleryDrawer(_ref4) {
         });
         onChange(images);
         setSelected([]);
-        onCancel();
+        return onCancel();
       },
-      label: "Confirm"
+      label: "完成"
     }
   };
 
@@ -430,7 +438,7 @@ function GalleryDrawer(_ref4) {
               _context2.prev = 7;
               _context2.t0 = _context2["catch"](1);
               toasts.addToast({
-                title: "Failed to delete image",
+                title: "无法删除图片",
                 tone: "negative",
                 message: _context2.t0.message
               });
@@ -448,8 +456,8 @@ function GalleryDrawer(_ref4) {
     };
   }();
 
-  var listItems = loading || error ? [] : data[list.gqlNames.listQueryName].map(function (item) {
-    return jsx(ToastProvider, null, jsx(GalleryItem, {
+  var listItems = loading$1 || error ? [] : data[list.gqlNames.listQueryName].map(function (item) {
+    return core.jsx(toast.ToastProvider, null, core.jsx(BigImageItem, {
       key: item.id,
       item: item,
       checked: selected.includes(item.id),
@@ -458,43 +466,43 @@ function GalleryDrawer(_ref4) {
       }
     }));
   });
-  return jsx(ToastProvider, null, jsx(DrawerProvider, null, jsx(DrawerController, {
+  return core.jsx(toast.ToastProvider, null, core.jsx(modals.DrawerProvider, null, core.jsx(modals.DrawerController, {
     isOpen: isOpen
-  }, jsx(Drawer, {
-    title: "Image Gallery",
+  }, core.jsx(modals.Drawer, {
+    title: "Image BigImage",
     actions: actions
-  }, loading ? jsx("div", {
+  }, loading$1 ? core.jsx("div", {
     css: {
       minHeight: "calc(100vh - 170px)",
       display: "flex",
       justifyContent: "center",
       alignItems: "center"
     }
-  }, jsx(LoadingDots, {
+  }, core.jsx(loading.LoadingDots, {
     label: "Loading"
-  })) : jsx("div", {
+  })) : core.jsx("div", {
     css: {
       minHeight: "calc(100vh - 170px)"
     }
-  }, error ? jsx("div", null, "Error has occurred: ", error === null || error === void 0 ? void 0 : error.message) : jsx("div", null, jsx("div", {
+  }, error ? core.jsx("div", null, "\u53D1\u751F\u9519\u8BEF: ", error === null || error === void 0 ? void 0 : error.message) : core.jsx("div", null, core.jsx("div", {
     css: {
       padding: "20px 0 0 0",
       display: "flex",
       justifyContent: "space-between",
       minHeight: "52px"
     }
-  }, jsx("div", null, "Showing", " ", jsx("strong", null, data[list.gqlNames.listQueryName].length), " ", "of ", data[list.gqlNames.listQueryCountName], " image(s)"), selected.length > 0 && jsx(Button, {
+  }, core.jsx("div", null, "\u663E\u793A", " ", core.jsx("strong", null, data[list.gqlNames.listQueryName].length), " ", "\u5173\u4E8E ", data[list.gqlNames.listQueryCountName], " \u56FE\u7247"), selected.length > 0 && core.jsx(button.Button, {
     tone: "negative",
     size: "small",
     onClick: function onClick() {
       return deleteItems();
     }
-  }, "Delete")), jsx(GalleryItemsWrapper, null, jsx(UploadFile, {
+  }, "\u5220\u9664")), core.jsx(BigImageItemsWrapper, null, core.jsx(UploadFile, {
     listKey: listKey,
     onFinished: function onFinished() {
       return refetch();
     }
-  }), listItems), data[list.gqlNames.listQueryCountName] > list.pageSize && jsx("div", null, jsx(Button, {
+  }), listItems), data[list.gqlNames.listQueryCountName] > list.pageSize && core.jsx("div", null, core.jsx(button.Button, {
     onClick: function onClick() {
       return fetchMore({
         variables: {
@@ -502,17 +510,18 @@ function GalleryDrawer(_ref4) {
         }
       });
     }
-  }, "Fetch more"))))))));
+  }, "\u663E\u793A\u66F4\u591A"))))))));
 }
 
-var GalleryItem = function GalleryItem(_ref) {
+var BigImageItem = function BigImageItem(_ref) {
   var _onClick = _ref.onClick,
       onRemove = _ref.onRemove,
       item = _ref.item,
       _ref$checked = _ref.checked,
       checked = _ref$checked === void 0 ? false : _ref$checked;
-  return jsx("div", {
+  return core.jsx("div", {
     css: {
+      margin: "10px 0 ",
       backgroundColor: "#e1e5e9",
       borderRadius: "8px",
       paddingBottom: "56.25%",
@@ -523,42 +532,42 @@ var GalleryItem = function GalleryItem(_ref) {
     onClick: function onClick() {
       return _onClick === null || _onClick === void 0 ? void 0 : _onClick(item);
     }
-  }, _onClick && jsx("div", {
+  }, _onClick && core.jsx("div", {
     css: {
       position: "absolute",
       zIndex: "1",
       margin: "10px",
       right: "0"
     }
-  }, jsx(Checkbox, {
+  }, core.jsx(fields.Checkbox, {
     checked: checked,
     readOnly: true
-  })), onRemove && jsx("div", {
+  })), onRemove && core.jsx("div", {
     css: {
       position: "absolute",
       zIndex: "1",
       margin: "10px",
       right: "0"
     }
-  }, jsx(Button, {
+  }, core.jsx(button.Button, {
     size: "small",
     tone: "negative",
     onClick: function onClick() {
       return onRemove(item);
     }
-  }, jsx("svg", {
+  }, core.jsx("svg", {
     xmlns: "http://www.w3.org/2000/svg",
     width: "16",
     height: "16",
     fill: "none",
     viewBox: "0 0 24 24",
     stroke: "currentColor"
-  }, jsx("path", {
+  }, core.jsx("path", {
     strokeLinecap: "round",
     strokeLinejoin: "round",
     strokeWidth: 2,
     d: "M6 18L18 6M6 6l12 12"
-  })))), jsx("img", {
+  })))), core.jsx("img", {
     css: {
       objectFit: "cover",
       width: "100%",
@@ -569,10 +578,10 @@ var GalleryItem = function GalleryItem(_ref) {
     alt: item.id
   }));
 };
-var GalleryItemPlaceholder = function GalleryItemPlaceholder(_ref2) {
+var BigImageItemPlaceholder = function BigImageItemPlaceholder(_ref2) {
   var children = _ref2.children,
       _onClick2 = _ref2.onClick;
-  return jsx("div", {
+  return core.jsx("div", {
     onClick: function onClick() {
       return _onClick2 === null || _onClick2 === void 0 ? void 0 : _onClick2();
     },
@@ -583,29 +592,27 @@ var GalleryItemPlaceholder = function GalleryItemPlaceholder(_ref2) {
       position: "relative",
       overflow: "hidden",
       cursor: "pointer",
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
     }
   }, children);
 };
-var GalleryItemsWrapper = function GalleryItemsWrapper(_ref3) {
+var BigImageItemsWrapper = function BigImageItemsWrapper(_ref3) {
   var children = _ref3.children;
-  return jsx("div", {
+  return core.jsx("div", {
     css: {
-      display: "grid",
-      gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-      gap: "1rem",
-      margin: "30px 0"
+      display: "block",
+      margin: "10px 10px"
     }
   }, children);
 };
-var Gallery = function Gallery(_ref4) {
+var BigImageView = function BigImageView(_ref4) {
   var listKey = _ref4.listKey,
       value = _ref4.value,
       onChange = _ref4.onChange;
 
-  var _useState = useState(false),
+  var _useState = React.useState(false),
       _useState2 = _slicedToArray(_useState, 2),
       isModalOpen = _useState2[0],
       setIsModalOpen = _useState2[1];
@@ -627,7 +634,7 @@ var Gallery = function Gallery(_ref4) {
   };
 
   var listItems = value.map(function (item) {
-    return jsx(GalleryItem, {
+    return core.jsx(BigImageItem, {
       key: item.id,
       item: item,
       checked: false,
@@ -636,11 +643,11 @@ var Gallery = function Gallery(_ref4) {
       }
     });
   });
-  return jsx("div", null, value.length > 0 ? jsx(GalleryItemsWrapper, null, listItems) : jsx(GalleryItemsWrapper, null, jsx(GalleryItemPlaceholder, null), jsx(GalleryItemPlaceholder, null), jsx(GalleryItemPlaceholder, null)), jsx(Button, {
+  return core.jsx("div", null, value.length > 0 ? core.jsx(BigImageItemsWrapper, null, listItems) : core.jsx(BigImageItemsWrapper, null, core.jsx(BigImageItemPlaceholder, null)), core.jsx(button.Button, {
     onClick: function onClick() {
       return setIsModalOpen(true);
     }
-  }, jsx("span", null, "Add Images")), jsx(GalleryDrawer, {
+  }, core.jsx("span", null, "\u6DFB\u52A0\u56FE\u7247")), core.jsx(BigImageDrawer, {
     listKey: listKey,
     isOpen: isModalOpen,
     onCancel: function onCancel() {
@@ -653,7 +660,7 @@ var Gallery = function Gallery(_ref4) {
 };
 
 var customFields = {
-  gallery: function gallery(_ref) {
+  BigImage: function BigImage(_ref) {
     var listKey = _ref.listKey,
         _ref$defaultValue = _ref.defaultValue,
         defaultValue = _ref$defaultValue === void 0 ? [] : _ref$defaultValue;
@@ -663,7 +670,7 @@ var customFields = {
         var value = _ref2.value,
             _onChange = _ref2.onChange;
             _ref2.autoFocus;
-        return /*#__PURE__*/React.createElement(FieldContainer, null, /*#__PURE__*/React.createElement(Gallery, {
+        return /*#__PURE__*/React__default["default"].createElement(fields.FieldContainer, null, /*#__PURE__*/React__default["default"].createElement(BigImageView, {
           listKey: listKey,
           value: value,
           onChange: function onChange(items) {
@@ -679,35 +686,35 @@ var customFields = {
     };
   }
 };
-var gallery = function gallery(_ref3) {
+var BigImage = function BigImage(_ref3) {
   var listKey = _ref3.listKey;
-  return component({
+  return componentBlocks.component({
     preview: function preview(props) {
-      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(NotEditable, null, props.fields.items.value.length > 0 ? /*#__PURE__*/React.createElement(GalleryItemsWrapper, null, props.fields.items.value.map(function (image) {
-        return /*#__PURE__*/React.createElement(GalleryItem, {
+      return /*#__PURE__*/React__default["default"].createElement("div", null, /*#__PURE__*/React__default["default"].createElement(componentBlocks.NotEditable, null, props.fields.items.value.length > 0 ? /*#__PURE__*/React__default["default"].createElement(BigImageItemsWrapper, null, props.fields.items.value.map(function (image) {
+        return /*#__PURE__*/React__default["default"].createElement(BigImageItem, {
           key: image.id,
           item: image
         });
-      })) : /*#__PURE__*/React.createElement(GalleryItemsWrapper, null, /*#__PURE__*/React.createElement(GalleryItemPlaceholder, null), /*#__PURE__*/React.createElement(GalleryItemPlaceholder, null), /*#__PURE__*/React.createElement(GalleryItemPlaceholder, null))), /*#__PURE__*/React.createElement("div", {
+      })) : /*#__PURE__*/React__default["default"].createElement(BigImageItemsWrapper, null, /*#__PURE__*/React__default["default"].createElement(BigImageItemPlaceholder, null))), /*#__PURE__*/React__default["default"].createElement("div", {
         style: {
           borderLeft: "3px solid #CBD5E0",
           paddingLeft: 16
         }
-      }, /*#__PURE__*/React.createElement("div", {
+      }, /*#__PURE__*/React__default["default"].createElement("div", {
         style: {
           fontStyle: "italic",
           color: "#4A5568"
         }
       }, props.fields.capture.element)));
     },
-    label: "Gallery",
+    label: "BigImage",
     schema: {
-      items: customFields.gallery({
+      items: customFields.BigImage({
         listKey: listKey
       }),
-      capture: fields.child({
+      capture: componentBlocks.fields.child({
         kind: "block",
-        placeholder: "Capture...",
+        placeholder: "说明...",
         formatting: {
           inlineMarks: "inherit",
           softBreaks: "inherit"
@@ -719,4 +726,4 @@ var gallery = function gallery(_ref3) {
   });
 };
 
-export { gallery };
+exports.BigImage = BigImage;

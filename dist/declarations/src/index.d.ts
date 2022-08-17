@@ -7,14 +7,14 @@ export declare type ImageData = {
     id: string;
     url: string;
 };
-export declare type GalleryItem = {
+export declare type BigImageItem = {
     id: string;
     name: string;
     image: ImageData;
 };
-export declare const gallery: ({ listKey }: {
+export declare const BigImage: ({ listKey }: {
     listKey: string;
 }) => import("@keystone-6/fields-document/component-blocks").ComponentBlock<{
-    items: FormField<GalleryItem[], undefined>;
+    items: FormField<BigImageItem[], undefined>;
     capture: import("@keystone-6/fields-document/component-blocks").ChildField;
 }>;

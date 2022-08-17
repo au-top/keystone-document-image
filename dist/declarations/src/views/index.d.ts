@@ -1,22 +1,22 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { jsx } from "@keystone-ui/core";
-import { GalleryItem as GalleryItemFields } from "../";
-export declare const GalleryItem: ({ onClick, onRemove, item, checked, }: {
-    onClick?(value: GalleryItemFields): void;
-    onRemove?(value: GalleryItemFields): void;
-    item: GalleryItemFields;
+import { BigImageItem as BigImageItemFields } from "../";
+export declare const BigImageItem: ({ onClick, onRemove, item, checked, }: {
+    onClick?(value: BigImageItemFields): void;
+    onRemove?(value: BigImageItemFields): void;
+    item: BigImageItemFields;
     checked?: boolean;
 }) => jsx.JSX.Element;
-export declare const GalleryItemPlaceholder: ({ children, onClick }: {
+export declare const BigImageItemPlaceholder: ({ children, onClick, }: {
     children?: any;
     onClick?(): void;
 }) => jsx.JSX.Element;
-export declare const GalleryItemsWrapper: ({ children }: {
+export declare const BigImageItemsWrapper: ({ children }: {
     children: any;
 }) => jsx.JSX.Element;
-export declare const Gallery: ({ listKey, value, onChange, }: {
+export declare const BigImageView: ({ listKey, value, onChange, }: {
     listKey: string;
-    value: GalleryItemFields[];
-    onChange(value: GalleryItemFields[]): void;
+    value: BigImageItemFields[];
+    onChange(value: BigImageItemFields[]): void;
 }) => jsx.JSX.Element;

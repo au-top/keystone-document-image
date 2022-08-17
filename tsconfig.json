@@ -2,8 +2,15 @@
   "compilerOptions": {
     "jsx": "react",
     "isolatedModules": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "lib": [
+      "ES2015"
+    ]
   },
-  "include": ["**/*"],
-  "exclude": ["**/node_modules/**/*"]
+  "include": [
+    "**/*"
+  ],
+  "exclude": [
+    "**/node_modules/**/*"
+  ]
 }

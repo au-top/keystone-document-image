@@ -18,8 +18,8 @@ import { Button } from "@keystone-ui/button";
 import { useList } from "@keystone-6/core/admin-ui/context";
 import { LoadingDots } from "@keystone-ui/loading";
 
-import { GalleryItem, GalleryItemPlaceholder, GalleryItemsWrapper } from "./";
-import { GalleryItem as GalleryItemType } from "../";
+import { BigImageItem, BigImageItemPlaceholder, BigImageItemsWrapper } from "./";
+import { BigImageItem as BigImageItemType } from "../";
 
 function UploadFile({
   listKey,
@@ -70,7 +70,7 @@ function UploadFile({
   return (
     <div>
         <ToastProvider>
-      <GalleryItemPlaceholder
+      <BigImageItemPlaceholder
         onClick={() => {
           inputRef.current?.click();
         }}
@@ -117,7 +117,7 @@ function UploadFile({
             />
           </svg>
         )}
-      </GalleryItemPlaceholder>
+      </BigImageItemPlaceholder>
         </ToastProvider>
       <input
         autoComplete="off"
@@ -132,7 +132,7 @@ function UploadFile({
   );
 }
 
-export default function GalleryDrawer({
+export default function BigImageDrawer({
   listKey,
   isOpen,
   onCancel,
@@ -141,7 +141,7 @@ export default function GalleryDrawer({
   listKey: string;
   isOpen: boolean;
   onCancel(): void;
-  onChange(items: GalleryItemType[]): void;
+  onChange(items: BigImageItemType[]): void;
 }) {
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -220,23 +220,23 @@ export default function GalleryDrawer({
   const actions = {
     cancel: {
       action: () => onCancel(),
-      label: "Cancel",
+      label: "离开",
     },
     confirm: {
       action: () => {
         const images = data[list.gqlNames.listQueryName].filter(
-          (item: GalleryItemType) => selected.includes(item.id)
+          (item: BigImageItemType) => selected.includes(item.id)
         );
 
         onChange(images);
         setSelected([]);
-        onCancel();
+        return onCancel();
       },
-      label: "Confirm",
+      label: "完成",
     },
   };
 
-  const toggleItem = (item: GalleryItemType) => {
+  const toggleItem = (item: BigImageItemType) => {
     setSelected(
       selected.includes(item.id)
         ? selected.filter((i) => i != item.id) // remove item
@@ -261,7 +261,7 @@ export default function GalleryDrawer({
       setSelected([]);
     } catch (err: any) {
       toasts.addToast({
-        title: "Failed to delete image",
+        title: "无法删除图片",
         tone: "negative",
         message: err.message,
       });
@@ -271,10 +271,10 @@ export default function GalleryDrawer({
   const listItems =
     loading || error
       ? []
-      : data[list.gqlNames.listQueryName].map((item: GalleryItemType) => {
+      : data[list.gqlNames.listQueryName].map((item: BigImageItemType) => {
           return (
               <ToastProvider>
-            <GalleryItem
+            <BigImageItem
               key={item.id}
               item={item}
               checked={selected.includes(item.id)}
@@ -288,7 +288,7 @@ export default function GalleryDrawer({
       <ToastProvider>
     <DrawerProvider>
       <DrawerController isOpen={isOpen}>
-        <Drawer title="Image Gallery" actions={actions}>
+        <Drawer title="Image BigImage" actions={actions}>
           {loading ? (
             <div
               css={{
@@ -307,7 +307,7 @@ export default function GalleryDrawer({
               }}
             >
               {error ? (
-                <div>Error has occurred: {error?.message}</div>
+                <div>发生错误: {error?.message}</div>
               ) : (
                 <div>
                   <div
@@ -319,11 +319,11 @@ export default function GalleryDrawer({
                     }}
                   >
                     <div>
-                      Showing{" "}
+                      显示{" "}
                       <strong>
                         {data[list.gqlNames.listQueryName].length}
                       </strong>{" "}
-                      of {data[list.gqlNames.listQueryCountName]} image(s)
+                      关于 {data[list.gqlNames.listQueryCountName]} 图片
                     </div>
                     {selected.length > 0 && (
                       <Button
@@ -331,17 +331,17 @@ export default function GalleryDrawer({
                         size="small"
                         onClick={() => deleteItems()}
                       >
-                        Delete
+                        删除
                       </Button>
                     )}
                   </div>
-                  <GalleryItemsWrapper>
+                  <BigImageItemsWrapper>
                     <UploadFile
                       listKey={listKey}
                       onFinished={() => refetch()}
                     />
                     {listItems}
-                  </GalleryItemsWrapper>
+                  </BigImageItemsWrapper>
                   {data[list.gqlNames.listQueryCountName] > list.pageSize && (
                     <div>
                       <Button
@@ -353,7 +353,7 @@ export default function GalleryDrawer({
                           })
                         }
                       >
-                        Fetch more
+                        显示更多
                       </Button>
                     </div>
                   )}

@@ -261,7 +261,7 @@ function UploadFile(_ref) {
     };
   }();
 
-  return core.jsx("div", null, core.jsx(toast.ToastProvider, null, core.jsx(GalleryItemPlaceholder, {
+  return core.jsx("div", null, core.jsx(toast.ToastProvider, null, core.jsx(BigImageItemPlaceholder, {
     onClick: function onClick() {
       var _inputRef$current;
 
@@ -315,7 +315,7 @@ function UploadFile(_ref) {
   }));
 }
 
-function GalleryDrawer(_ref4) {
+function BigImageDrawer(_ref4) {
   var listKey = _ref4.listKey,
       isOpen = _ref4.isOpen,
       onCancel = _ref4.onCancel,
@@ -387,7 +387,7 @@ function GalleryDrawer(_ref4) {
       action: function action() {
         return onCancel();
       },
-      label: "Cancel"
+      label: "离开"
     },
     confirm: {
       action: function action() {
@@ -396,9 +396,9 @@ function GalleryDrawer(_ref4) {
         });
         onChange(images);
         setSelected([]);
-        onCancel();
+        return onCancel();
       },
-      label: "Confirm"
+      label: "完成"
     }
   };
 
@@ -438,7 +438,7 @@ function GalleryDrawer(_ref4) {
               _context2.prev = 7;
               _context2.t0 = _context2["catch"](1);
               toasts.addToast({
-                title: "Failed to delete image",
+                title: "无法删除图片",
                 tone: "negative",
                 message: _context2.t0.message
               });
@@ -457,7 +457,7 @@ function GalleryDrawer(_ref4) {
   }();
 
   var listItems = loading$1 || error ? [] : data[list.gqlNames.listQueryName].map(function (item) {
-    return core.jsx(toast.ToastProvider, null, core.jsx(GalleryItem, {
+    return core.jsx(toast.ToastProvider, null, core.jsx(BigImageItem, {
       key: item.id,
       item: item,
       checked: selected.includes(item.id),
@@ -469,7 +469,7 @@ function GalleryDrawer(_ref4) {
   return core.jsx(toast.ToastProvider, null, core.jsx(modals.DrawerProvider, null, core.jsx(modals.DrawerController, {
     isOpen: isOpen
   }, core.jsx(modals.Drawer, {
-    title: "Image Gallery",
+    title: "Image BigImage",
     actions: actions
   }, loading$1 ? core.jsx("div", {
     css: {
@@ -484,20 +484,20 @@ function GalleryDrawer(_ref4) {
     css: {
       minHeight: "calc(100vh - 170px)"
     }
-  }, error ? core.jsx("div", null, "Error has occurred: ", error === null || error === void 0 ? void 0 : error.message) : core.jsx("div", null, core.jsx("div", {
+  }, error ? core.jsx("div", null, "\u53D1\u751F\u9519\u8BEF: ", error === null || error === void 0 ? void 0 : error.message) : core.jsx("div", null, core.jsx("div", {
     css: {
       padding: "20px 0 0 0",
       display: "flex",
       justifyContent: "space-between",
       minHeight: "52px"
     }
-  }, core.jsx("div", null, "Showing", " ", core.jsx("strong", null, data[list.gqlNames.listQueryName].length), " ", "of ", data[list.gqlNames.listQueryCountName], " image(s)"), selected.length > 0 && core.jsx(button.Button, {
+  }, core.jsx("div", null, "\u663E\u793A", " ", core.jsx("strong", null, data[list.gqlNames.listQueryName].length), " ", "\u5173\u4E8E ", data[list.gqlNames.listQueryCountName], " \u56FE\u7247"), selected.length > 0 && core.jsx(button.Button, {
     tone: "negative",
     size: "small",
     onClick: function onClick() {
       return deleteItems();
     }
-  }, "Delete")), core.jsx(GalleryItemsWrapper, null, core.jsx(UploadFile, {
+  }, "\u5220\u9664")), core.jsx(BigImageItemsWrapper, null, core.jsx(UploadFile, {
     listKey: listKey,
     onFinished: function onFinished() {
       return refetch();
@@ -510,10 +510,10 @@ function GalleryDrawer(_ref4) {
         }
       });
     }
-  }, "Fetch more"))))))));
+  }, "\u663E\u793A\u66F4\u591A"))))))));
 }
 
-var GalleryItem = function GalleryItem(_ref) {
+var BigImageItem = function BigImageItem(_ref) {
   var _onClick = _ref.onClick,
       onRemove = _ref.onRemove,
       item = _ref.item,
@@ -521,6 +521,7 @@ var GalleryItem = function GalleryItem(_ref) {
       checked = _ref$checked === void 0 ? false : _ref$checked;
   return core.jsx("div", {
     css: {
+      margin: "10px 0 ",
       backgroundColor: "#e1e5e9",
       borderRadius: "8px",
       paddingBottom: "56.25%",
@@ -577,7 +578,7 @@ var GalleryItem = function GalleryItem(_ref) {
     alt: item.id
   }));
 };
-var GalleryItemPlaceholder = function GalleryItemPlaceholder(_ref2) {
+var BigImageItemPlaceholder = function BigImageItemPlaceholder(_ref2) {
   var children = _ref2.children,
       _onClick2 = _ref2.onClick;
   return core.jsx("div", {
@@ -591,24 +592,22 @@ var GalleryItemPlaceholder = function GalleryItemPlaceholder(_ref2) {
       position: "relative",
       overflow: "hidden",
       cursor: "pointer",
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
     }
   }, children);
 };
-var GalleryItemsWrapper = function GalleryItemsWrapper(_ref3) {
+var BigImageItemsWrapper = function BigImageItemsWrapper(_ref3) {
   var children = _ref3.children;
   return core.jsx("div", {
     css: {
-      display: "grid",
-      gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-      gap: "1rem",
-      margin: "30px 0"
+      display: "block",
+      margin: "10px 10px"
     }
   }, children);
 };
-var Gallery = function Gallery(_ref4) {
+var BigImageView = function BigImageView(_ref4) {
   var listKey = _ref4.listKey,
       value = _ref4.value,
       onChange = _ref4.onChange;
@@ -635,7 +634,7 @@ var Gallery = function Gallery(_ref4) {
   };
 
   var listItems = value.map(function (item) {
-    return core.jsx(GalleryItem, {
+    return core.jsx(BigImageItem, {
       key: item.id,
       item: item,
       checked: false,
@@ -644,11 +643,11 @@ var Gallery = function Gallery(_ref4) {
       }
     });
   });
-  return core.jsx("div", null, value.length > 0 ? core.jsx(GalleryItemsWrapper, null, listItems) : core.jsx(GalleryItemsWrapper, null, core.jsx(GalleryItemPlaceholder, null), core.jsx(GalleryItemPlaceholder, null), core.jsx(GalleryItemPlaceholder, null)), core.jsx(button.Button, {
+  return core.jsx("div", null, value.length > 0 ? core.jsx(BigImageItemsWrapper, null, listItems) : core.jsx(BigImageItemsWrapper, null, core.jsx(BigImageItemPlaceholder, null)), core.jsx(button.Button, {
     onClick: function onClick() {
       return setIsModalOpen(true);
     }
-  }, core.jsx("span", null, "Add Images")), core.jsx(GalleryDrawer, {
+  }, core.jsx("span", null, "\u6DFB\u52A0\u56FE\u7247")), core.jsx(BigImageDrawer, {
     listKey: listKey,
     isOpen: isModalOpen,
     onCancel: function onCancel() {
@@ -661,7 +660,7 @@ var Gallery = function Gallery(_ref4) {
 };
 
 var customFields = {
-  gallery: function gallery(_ref) {
+  BigImage: function BigImage(_ref) {
     var listKey = _ref.listKey,
         _ref$defaultValue = _ref.defaultValue,
         defaultValue = _ref$defaultValue === void 0 ? [] : _ref$defaultValue;
@@ -671,7 +670,7 @@ var customFields = {
         var value = _ref2.value,
             _onChange = _ref2.onChange;
             _ref2.autoFocus;
-        return /*#__PURE__*/React__default["default"].createElement(fields.FieldContainer, null, /*#__PURE__*/React__default["default"].createElement(Gallery, {
+        return /*#__PURE__*/React__default["default"].createElement(fields.FieldContainer, null, /*#__PURE__*/React__default["default"].createElement(BigImageView, {
           listKey: listKey,
           value: value,
           onChange: function onChange(items) {
@@ -687,16 +686,16 @@ var customFields = {
     };
   }
 };
-var gallery = function gallery(_ref3) {
+var BigImage = function BigImage(_ref3) {
   var listKey = _ref3.listKey;
   return componentBlocks.component({
     preview: function preview(props) {
-      return /*#__PURE__*/React__default["default"].createElement("div", null, /*#__PURE__*/React__default["default"].createElement(componentBlocks.NotEditable, null, props.fields.items.value.length > 0 ? /*#__PURE__*/React__default["default"].createElement(GalleryItemsWrapper, null, props.fields.items.value.map(function (image) {
-        return /*#__PURE__*/React__default["default"].createElement(GalleryItem, {
+      return /*#__PURE__*/React__default["default"].createElement("div", null, /*#__PURE__*/React__default["default"].createElement(componentBlocks.NotEditable, null, props.fields.items.value.length > 0 ? /*#__PURE__*/React__default["default"].createElement(BigImageItemsWrapper, null, props.fields.items.value.map(function (image) {
+        return /*#__PURE__*/React__default["default"].createElement(BigImageItem, {
           key: image.id,
           item: image
         });
-      })) : /*#__PURE__*/React__default["default"].createElement(GalleryItemsWrapper, null, /*#__PURE__*/React__default["default"].createElement(GalleryItemPlaceholder, null), /*#__PURE__*/React__default["default"].createElement(GalleryItemPlaceholder, null), /*#__PURE__*/React__default["default"].createElement(GalleryItemPlaceholder, null))), /*#__PURE__*/React__default["default"].createElement("div", {
+      })) : /*#__PURE__*/React__default["default"].createElement(BigImageItemsWrapper, null, /*#__PURE__*/React__default["default"].createElement(BigImageItemPlaceholder, null))), /*#__PURE__*/React__default["default"].createElement("div", {
         style: {
           borderLeft: "3px solid #CBD5E0",
           paddingLeft: 16
@@ -708,14 +707,14 @@ var gallery = function gallery(_ref3) {
         }
       }, props.fields.capture.element)));
     },
-    label: "Gallery",
+    label: "BigImage",
     schema: {
-      items: customFields.gallery({
+      items: customFields.BigImage({
         listKey: listKey
       }),
       capture: componentBlocks.fields.child({
         kind: "block",
-        placeholder: "Capture...",
+        placeholder: "说明...",
         formatting: {
           inlineMarks: "inherit",
           softBreaks: "inherit"
@@ -727,4 +726,4 @@ var gallery = function gallery(_ref3) {
   });
 };
 
-exports.gallery = gallery;
+exports.BigImage = BigImage;
